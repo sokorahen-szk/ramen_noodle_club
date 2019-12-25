@@ -1,3 +1,6 @@
 {
-    "test" : "A"
+    "global" : {
+        "beginRowPos" : 2,
+        "beginColPos" : "C"
+    }
 }
