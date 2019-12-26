@@ -8,7 +8,7 @@
         "businessHours" : {
             "row" : 2,
             "col" : "C",
-            "searchMoveTarget" : "x"
+            "searchMoveTarget" : "y"
         }
     }
 }

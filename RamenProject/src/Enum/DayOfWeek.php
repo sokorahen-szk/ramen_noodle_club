@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Enum;
+
 class DayOfWeek {
     const SUNDAY       =   3;
     const MONDAY       =   4;
