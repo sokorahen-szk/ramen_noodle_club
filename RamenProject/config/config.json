@@ -1,6 +1,14 @@
 {
     "global" : {
-        "beginRowPos" : 2,
-        "beginColPos" : "C"
+        "ramenShop" : {
+            "row" : 2,
+            "col" : "B",
+            "searchMoveTarget" : "x"
+        },
+        "businessHours" : {
+            "row" : 2,
+            "col" : "C",
+            "searchMoveTarget" : "y"
+        }
     }
 }
