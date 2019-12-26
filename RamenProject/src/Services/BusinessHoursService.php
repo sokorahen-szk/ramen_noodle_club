@@ -33,8 +33,7 @@ class BusinessHoursService {
         $alphabetList = $this->sheetAlphabet->getAllAlphabet();
 
         //シートのIDを取得（曜日ごとに決まっている）
-        //$sheetId = DayOfWeek::getTodayDayOfWeekNumber();
-        $sheetId = 0;
+        $sheetId = DayOfWeek::getTodayDayOfWeekNumber();
 
         //対象店舗のIDリストを取得
         $shopIdList = $this->getRamenShopIdList($alphabetList, $sheetId);
@@ -47,7 +46,6 @@ class BusinessHoursService {
         }
 
         $count = 0;
-
         foreach($shopIdList as $id) {
             $results[] = $this->ramenShopCategories->changeCategoriesStatus(
                 $id,
