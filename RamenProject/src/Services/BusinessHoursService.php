@@ -5,30 +5,38 @@ namespace App\Services;
 use Noodlehaus\Config;
 
 use App\Lib\SheetSearch;
-
+use App\Lib\SheetAlphabet;
 
 class BusinessHoursService {
 
-    private static $config;
+    private $config;
+    private $sheetSearch;
+    private $sheetAlphabet;
 
-    public static function run()
+    public function __construct()
     {
-        self::$config = new Config("config/config.json");
-        $alphabetList = new SheetAlphabet(3);
-
-        var_dump(self::getRamenShopIdList($alphabetList));
-
-        //var_dump($alphabetList->getPosAlphabetNumber('AZ'));
-        //var_dump(do_shortcode("[supsystic-tables-cell id=0 row=1 col=C]"));
+        $this->config = new Config("config/config.json");
+        $this->sheetSearch = new SheetSearch();
+        $this->sheetAlphabet = new SheetAlphabet(2);
     }
 
-    private static function getRamenShopIdList($alphabetList)
+    public function run()
     {
-        $move = self::$config->get("global.ramenShop.searchMoveTarget");
-        $beginRowPos = self::$config->get("global.ramenShop.row");
-        $beginColPos = self::$config->get("global.ramenShop.col");
+        $alphabetList = $this->sheetAlphabet->getAllAlphabet();
+        $shopIdList = $this->getRamenShopIdList($alphabetList, 0);
+        var_dump($shopIdList);
+        //var_dump($alphabetList->getPosAlphabetNumber('AZ'));
+    }
 
-        return SheetSearch::search($alphabetList, $move, $beginRowPos, $beginColPos);
+    private function getRamenShopIdList($alphabetList, $sheetId)
+    {
+        return $this->sheetSearch->search(
+            $alphabetList,
+            $this->config->get("global.ramenShop.searchMoveTarget"),
+            $this->config->get("global.ramenShop.row"),
+            $this->config->get("global.ramenShop.col"),
+            $sheetId
+        );
 
     }
 

@@ -3,12 +3,12 @@
         "ramenShop" : {
             "row" : 2,
             "col" : "B",
-            "searchMoveTarget" : "x"
+            "searchMoveTarget" : "y"
         },
         "businessHours" : {
             "row" : 2,
             "col" : "C",
-            "searchMoveTarget" : "y"
+            "searchMoveTarget" : "x"
         }
     }
 }

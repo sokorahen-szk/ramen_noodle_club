@@ -5,8 +5,8 @@
  */
 $test_data = [
  ["fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa","fa"],
- ["AAAA",16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
- ["AAAA",16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+ ["AAAA",16,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+ ["AAAA",16,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
  ["AAAA",56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
  ["AAAA",57,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
  ["AAAA",58,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
@@ -92,15 +92,16 @@ function do_shortcode($content) {
             $results[ $result[0] ] = $result[1];
         }
     }
-    return test_data_store($results["id"], $results["row"], $results["col"]);
+    return test_data_store($results["id"], (int)$results["row"], $results["col"]);
 }
 
 function test_data_store($id, $row, $col) {
     global $test_data;
-    $id = 0; //今回はすべて0
-
     $col = getPosAlphabetNumber($col, 2);
-    return $test_data[$row][$col];
+    //var_dump($row);
+    //var_dump($col);
+    //exit();
+    return (String)$test_data[$row - 1][$col - 1];
 }
 
 function getPosAlphabetNumber($alphabet, $length)

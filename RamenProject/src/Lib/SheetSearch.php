@@ -2,8 +2,6 @@
 
 namespace App\Lib;
 
-use App\Lib\SheetAlphabet;
-
 class SheetSearch {
 
     private $sheetId;
@@ -11,34 +9,60 @@ class SheetSearch {
     private $row;
     private $col;
     private $alphabetList;
+    private $id;
+    private $sheetAlphabet;
 
-    public function search($alphabetList, $move, $beginRowPos, $beginColPos)
+    public function __construct()
     {
-        $this->row = $beginRowPos;
-        $this->col = $beginColPos;
-
-        $this->move($move);
-
-        var_dump($this->$pointer);
-
-        //$result = self::$loop();
-
     }
 
-    private static function move($move) :void
+    public function search($alphabetList, $move, $beginRowPos, $beginColPos, $sheetId)
+    {
+
+        $this->clearValues();
+
+        $this->row = (int)$beginRowPos;
+        $this->col = $beginColPos;//$this->convertToNumber($alphabetList, $beginColPos);
+        $this->id = $sheetId;
+        $this->setMovePointer($move);
+
+        $result = $this->loop();
+        return $result;
+    }
+
+    private function setMovePointer($move) :void
     {
         if($move === 'y') {
-            $this->$pointer = &$this->$row;
+            $this->pointer = &$this->row;
         } else if($move === 'x'){
-            $this->$pointer = &$this->$col;
+            $this->pointer = &$this->col;
         } else {
-            $this->$pointer = null;
+            $this->pointer = null;
         }
     }
 
     private function loop()
     {
+        $response = [];
+        while(($res = do_shortcode(
+            "[supsystic-tables-cell id=".$this->id." row=".$this->row." col=".$this->col."]"
+        )) != '') {
+            $response[] = $res;
+            $this->pointer++;
+        }
+        return $response;
+    }
 
+    private function clearValues()
+    {
+        $this->pointer = null;
+        $this->row = null;
+        $this->col = null;
+    }
+
+    private function convertToNumber($alphabetList, $beginColPos)
+    {
+        return array_search($beginColPos, $alphabetList) ?: null;
     }
 
 }
