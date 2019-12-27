@@ -22,7 +22,7 @@ class SheetSearch {
         $this->clearValues();
 
         $this->row = (int)$beginRowPos;
-        $this->col = $beginColPos;//$this->convertToNumber($alphabetList, $beginColPos);
+        $this->col = $beginColPos;
         $this->id = $sheetId;
         $this->setMovePointer($move);
 

@@ -17,7 +17,7 @@ class RamenShopCategories {
             $result = wp_set_post_categories(0, $id, false);
         }
 
-        if( !is_wp_error($result) || $result == false ) {
+        if( !is_wp_error($result) || $result !== false ) {
             return true;
         }
         return false;
