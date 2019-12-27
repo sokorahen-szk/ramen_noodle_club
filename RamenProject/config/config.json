@@ -1,14 +1,25 @@
 {
     "global" : {
+
         "ramenShop" : {
             "row" : 2,
             "col" : "B",
             "searchMoveTarget" : "y"
         },
+
         "businessHours" : {
             "row" : 2,
             "col" : "C",
             "searchMoveTarget" : "y"
+        },
+
+        "slack" : {
+            "errorNotifyChannel" : {
+                "hookUrl"           : "https://hooks.slack.com/services/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",
+                "username"          : "エラー通知",
+                "iconEmoji"        : ":alert:"
+            }
         }
+
     }
 }

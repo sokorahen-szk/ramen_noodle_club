@@ -15,6 +15,7 @@ use App\Enum\DayOfWeek;
 //Exceptions
 use App\Exceptions\ResultResponseMismatchException;
 
+use App\Lib\SlackClient;
 
 class BusinessHoursService {
 
@@ -41,12 +42,15 @@ class BusinessHoursService {
 
         //シートのIDを取得（曜日ごとに決まっている）
         $sheetId = DayOfWeek::getTodayDayOfWeekNumber();
-        $sheetId = 0;
+
         //対象店舗のIDリストを取得
         $shopIdList = $this->getRamenShopIdList($alphabetList, $sheetId);
 
         //営業中かどうかシート参照しデータ格納
         $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
+
+        $t = new SlackClient();
+        $t->pushMessage("A");
 
         if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
             throw new ResultResponseMismatchException();

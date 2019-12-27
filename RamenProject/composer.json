@@ -5,6 +5,7 @@
         }
     },
     "require": {
-        "hassankhan/config": "^2.1"
+        "hassankhan/config": "^2.1",
+        "guzzlehttp/guzzle": "^6.5"
     }
 }
