@@ -27,7 +27,7 @@ class SlackClient {
                 "POST",
                 $this->slackConfig->hookUrl,
                 [
-                    "form_params" => $this->payload(),
+                    "form_params" => $this->payload($message),
                     'headers'     => [
                         'Content-Type' => 'application/json'
                     ]
