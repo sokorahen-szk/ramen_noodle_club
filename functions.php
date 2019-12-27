@@ -64,12 +64,16 @@ $test_data = [
  ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
 ];
 
+
+/****************************************************************
+ ▼　ここから、 functions.php 内で使うコード　▼
+****************************************************************/
 define("RAMEN_PROJECT_INCLUDE_SERVICE_STATUS", class_exists('BusinessHoursService', false) );
 define("VENDOR_PATH", "/RamenProject/vendor/autoload.php");
 
 try {
     define("VENDOR_DIRECTORY_FULL_PATH_NAME", checkVendorPath() );
-    require_once dirname(__FILE__) . "/RamenProject/main.php";
+    include_once dirname(__FILE__) . "/RamenProject/main.php";
 } catch (Exception $e) {
     //Autoloadが読み込みできない場合、例外処理として対応し、継続処理は続ける。システム上影響はでない
 }
@@ -82,6 +86,10 @@ function checkVendorPath() {
     }
     throw new Exception('Include file does not exists or is not readable.');
 }
+/****************************************************************
+ ▲　ここまで、 functions.php 内で使うコード　▲
+****************************************************************/
+
 
 //exsample :: do_shortcode("[supsystic-tables-cell id=3 row=2 col=B]")
 //do_shortcodeの擬似プログラム

@@ -13,7 +13,8 @@ use App\Lib\RamenShopCategories;
 use App\Enum\DayOfWeek;
 
 //Exceptions
-use App\Exceptions\ClassTypeMismatchException;
+use App\Exceptions\ResultResponseMismatchException;
+
 
 class BusinessHoursService {
 
@@ -32,36 +33,33 @@ class BusinessHoursService {
 
     public function run()
     {
-        try {
-            $results = [];
+        $results = [];
+        $count = 0;
 
-            //アルファベットの文字列 A 〜 AZまでを取得
-            $alphabetList = $this->sheetAlphabet->getAllAlphabet();
+        //アルファベットの文字列 A 〜 AZまでを取得
+        $alphabetList = $this->sheetAlphabet->getAllAlphabet();
 
-            //シートのIDを取得（曜日ごとに決まっている）
-            $sheetId = DayOfWeek::getTodayDayOfWeekNumber();
+        //シートのIDを取得（曜日ごとに決まっている）
+        $sheetId = DayOfWeek::getTodayDayOfWeekNumber();
+        $sheetId = 0;
+        //対象店舗のIDリストを取得
+        $shopIdList = $this->getRamenShopIdList($alphabetList, $sheetId);
 
-            //対象店舗のIDリストを取得
-            $shopIdList = $this->getRamenShopIdList($alphabetList, $sheetId);
+        //営業中かどうかシート参照しデータ格納
+        $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
 
-            //営業中かどうかシート参照しデータ格納
-            $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
-
-            if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
-                return false;
-            }
-
-            $count = 0;
-            foreach($shopIdList as $id) {
-                $results[] = $this->ramenShopCategories->changeCategoriesStatus(
-                    $id,
-                    $currentBusinessHourStatusList[$count++]
-                );
-            }
-            return !in_array(false, $results);
-        } catch(ClassTypeMismatchException $e) {
-            //
+        if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
+            throw new ResultResponseMismatchException();
         }
+
+        foreach($shopIdList as $id) {
+            $results[] = $this->ramenShopCategories->changeCategoriesStatus(
+                $id,
+                $currentBusinessHourStatusList[$count++]
+            );
+        }
+
+        return !in_array(false, $results);
     }
 
     private function getRamenShopIdList($alphabetList, $sheetId)
@@ -81,6 +79,7 @@ class BusinessHoursService {
 
         //スプレットシートの営業時間 00:00 - 23:30　を現在の位置と合わせて座標取得するための位置情報を数値で取得する
         $beginColPos = $currentTime[0] * 2 + floor($currentTime[1]/30); // 0 - 57 が求まる
+
         return $this->sheetSearch->search(
             $alphabetList,
             $this->config->get("global.businessHours.searchMoveTarget"),
@@ -89,12 +88,4 @@ class BusinessHoursService {
             $sheetId
         );
     }
-
-    private function guardConfigNotEmptiy()
-    {
-        if( !($this->config instanceof Config) ) {
-            throw new ClassTypeMismatchException();
-        }
-    }
-
 }

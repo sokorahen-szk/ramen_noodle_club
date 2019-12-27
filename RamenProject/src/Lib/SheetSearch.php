@@ -2,6 +2,8 @@
 
 namespace App\Lib;
 
+use App\Exceptions\BusinessHourSheetEmptyException;
+
 class SheetSearch {
 
     private $sheetId;
@@ -27,6 +29,11 @@ class SheetSearch {
         $this->setMovePointer($move);
 
         $result = $this->loop();
+
+        if($result == null || !is_array($result) ) {
+            throw new BusinessHourSheetEmptyException();
+        }
+
         return $result;
     }
 
