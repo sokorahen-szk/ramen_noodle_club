@@ -27,10 +27,7 @@ class SlackClient {
                 "POST",
                 $this->slackConfig->hookUrl,
                 [
-                    "form_params" => $this->payload($message),
-                    'headers'     => [
-                        'Content-Type' => 'application/json'
-                    ]
+                    "form_params" => $this->payload($message)
                 ]
             );
 
@@ -44,23 +41,20 @@ class SlackClient {
     */
     private function setConfig() :void
     {
-
         $this->slackConfig = (Object) [
             "hookUrl"       => $this->config->get("global.slack.errorNotifyChannel.hookUrl"),
             "username"      => $this->config->get("global.slack.errorNotifyChannel.username"),
             "iconEmoji"     => $this->config->get("global.slack.errorNotifyChannel.iconEmoji")
         ];
-
     }
 
     private function payload($message)
     {
-        $payload = [
+        $payload = json_encode([
             "username"      => $this->slackConfig->username,
             "icon_emoji"    => $this->slackConfig->iconEmoji,
             "text"          => $message
-        ];
-        return ["payload" => $payload];
+        ]);
+        return [ "payload" => $payload ];
     }
-
 }

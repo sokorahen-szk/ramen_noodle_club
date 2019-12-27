@@ -15,7 +15,7 @@
 
         "slack" : {
             "errorNotifyChannel" : {
-                "hookUrl"           : "https://hooks.slack.com/services/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",
+                "hookUrl"           : "https://hooks.slack.com/services/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",
                 "username"          : "エラー通知",
                 "iconEmoji"         : ":alert:"
             }

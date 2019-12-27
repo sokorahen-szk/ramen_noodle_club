@@ -50,7 +50,7 @@ class BusinessHoursService {
         $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
 
         $t = new SlackClient();
-        $t->pushMessage("A");
+        $t->pushMessage("test");
 
         if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
             throw new ResultResponseMismatchException();
