@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+//Vendor
 use Noodlehaus\Config;
 
 //Libs
@@ -14,8 +15,6 @@ use App\Enum\DayOfWeek;
 
 //Exceptions
 use App\Exceptions\ResultResponseMismatchException;
-
-use App\Lib\SlackClient;
 
 class BusinessHoursService {
 
@@ -48,9 +47,6 @@ class BusinessHoursService {
 
         //営業中かどうかシート参照しデータ格納
         $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
-
-        $t = new SlackClient();
-        $t->pushMessage("test");
 
         if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
             throw new ResultResponseMismatchException();

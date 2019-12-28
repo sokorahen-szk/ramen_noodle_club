@@ -42,7 +42,7 @@ class SlackClient {
     private function setConfig() :void
     {
         $this->slackConfig = (Object) [
-            "hookUrl"       => $this->config->get("global.slack.errorNotifyChannel.hookUrl"),
+            "hookUrl"       => env("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"),
             "username"      => $this->config->get("global.slack.errorNotifyChannel.username"),
             "iconEmoji"     => $this->config->get("global.slack.errorNotifyChannel.iconEmoji")
         ];
@@ -51,9 +51,10 @@ class SlackClient {
     private function payload($message)
     {
         $payload = json_encode([
+            "icon_emoji"    => $this->slackConfig->hookUrl,
             "username"      => $this->slackConfig->username,
-            "icon_emoji"    => $this->slackConfig->iconEmoji,
-            "text"          => $message
+            "text"          => $message,
+            "icon_emoji"    => $this->slackConfig->iconEmoji
         ]);
         return [ "payload" => $payload ];
     }
