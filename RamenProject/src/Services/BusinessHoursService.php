@@ -31,7 +31,7 @@ class BusinessHoursService {
         $this->ramenShopCategories = new RamenShopCategories();
     }
 
-    public function run()
+    public function run() :Bool
     {
         $results = [];
         $count = 0;
@@ -62,7 +62,7 @@ class BusinessHoursService {
         return !in_array(false, $results);
     }
 
-    private function getRamenShopIdList($alphabetList, $sheetId)
+    private function getRamenShopIdList($alphabetList, $sheetId) :Array
     {
         return $this->sheetSearch->search(
             $alphabetList,
@@ -73,7 +73,7 @@ class BusinessHoursService {
         );
     }
 
-    private function getBusinessHoursStatusList($alphabetList, $sheetId)
+    private function getBusinessHoursStatusList($alphabetList, $sheetId) :Array
     {
         $currentTime = explode(':', date("H:i")); //HH:MM
 

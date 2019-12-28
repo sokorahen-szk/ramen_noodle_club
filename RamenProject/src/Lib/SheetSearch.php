@@ -14,11 +14,9 @@ class SheetSearch {
     private $id;
     private $sheetAlphabet;
 
-    public function __construct()
-    {
-    }
+    public function __construct(){}
 
-    public function search($alphabetList, $move, $beginRowPos, $beginColPos, $sheetId)
+    public function search($alphabetList, $move, $beginRowPos, $beginColPos, $sheetId) :Array
     {
 
         $this->clearValues();
@@ -48,7 +46,7 @@ class SheetSearch {
         }
     }
 
-    private function loop()
+    private function loop() :Array
     {
         $response = [];
         while(($res = do_shortcode(
@@ -60,14 +58,14 @@ class SheetSearch {
         return $response;
     }
 
-    private function clearValues()
+    private function clearValues() :void
     {
         $this->pointer = null;
         $this->row = null;
         $this->col = null;
     }
 
-    private function convertToNumber($alphabetList, $beginColPos)
+    private function convertToNumber($alphabetList, $beginColPos) :?Int
     {
         return array_search($beginColPos, $alphabetList) ?: null;
     }

@@ -32,9 +32,10 @@ class SlackClient {
             );
 
         } catch(GuzzleException $e) {
-            var_dump($e->getMessage());
+            //
         }
     }
+
 
     /*
         PRIVATE METHODS
@@ -48,7 +49,7 @@ class SlackClient {
         ];
     }
 
-    private function payload($message)
+    private function payload($message) :Array
     {
         $payload = json_encode([
             "icon_emoji"    => $this->slackConfig->hookUrl,

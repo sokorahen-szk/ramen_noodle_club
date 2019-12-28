@@ -12,12 +12,12 @@ class SheetAlphabet {
         $this->alphabetList = $this->generate();
     }
 
-    public function getAllAlphabet()
+    public function getAllAlphabet() :Array
     {
         return $this->alphabetList;
     }
 
-    public function getPosAlphabetNumber(String $alphabet)
+    public function getPosAlphabetNumber(String $alphabet) :?Int
     {
         if($this->length * 26 >= strlen($alphabet)) {
             $pos = array_search($alphabet, $this->alphabetList);
@@ -28,7 +28,7 @@ class SheetAlphabet {
         return null;
     }
 
-    private function generate()
+    private function generate() :Array
     {
         $list = [];
         $maxLimit = $this->length * 26;

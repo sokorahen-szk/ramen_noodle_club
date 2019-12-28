@@ -10,7 +10,7 @@ class RamenShopCategories {
 
     public function __construct(){}
 
-    public function changeCategoriesStatus($id, $status)
+    public function changeCategoriesStatus($id, $status) :Bool
     {
         try {
             $result = null;
