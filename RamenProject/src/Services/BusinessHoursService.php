@@ -25,12 +25,16 @@ class BusinessHoursService {
 
     public function __construct()
     {
-        $this->config = new Config("config/config.json");
+        $this->config = new Config(CONFIG_DIR . "config/config.json");
         $this->sheetSearch = new SheetSearch();
         $this->sheetAlphabet = new SheetAlphabet(2);
         $this->ramenShopCategories = new RamenShopCategories();
     }
 
+    /**
+     * 営業時間を確認し、変更するプロセスを起動する
+     * @return Bool カテゴリーの追加｜削除で　Toloveる　がなければ、True、そうでない場合はFalse
+     */
     public function run() :Bool
     {
         $results = [];
@@ -49,7 +53,12 @@ class BusinessHoursService {
         $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
 
         if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
-            throw new ResultResponseMismatchException();
+            throw new ResultResponseMismatchException([
+                "sheet_id"            => $sheetId,
+                "alphabet_list"       => $alphabetList,
+                "shop_id_list"        => $shopIdList,
+                "business_hours_list" => $currentBusinessHourStatusList
+            ]);
         }
 
         foreach($shopIdList as $id) {
@@ -62,6 +71,16 @@ class BusinessHoursService {
         return !in_array(false, $results);
     }
 
+    /*
+        PRIVATE METHODS
+    */
+
+    /**
+     * ラーメン屋さんのIDリストを取得する
+     * @param  Array $alphabetList アルファベット配列 Ex: ”A" 〜 "AZ" の情報が配列として入る
+     * @param  Int   $sheetId      参照するシートID
+     * @return Array               対象のシートを参照し、取得したデータを配列で返す。
+     */
     private function getRamenShopIdList($alphabetList, $sheetId) :Array
     {
         return $this->sheetSearch->search(
@@ -78,13 +97,13 @@ class BusinessHoursService {
         $currentTime = explode(':', date("H:i")); //HH:MM
 
         //スプレットシートの営業時間 00:00 - 23:30　を現在の位置と合わせて座標取得するための位置情報を数値で取得する
-        $beginColPos = $currentTime[0] * 2 + floor($currentTime[1]/30); // 0 - 57 が求まる
+        $beginColPos = ( $currentTime[0] * 2 + floor($currentTime[1]/30) ) - 1; // -1 - 56 が求まる
 
         return $this->sheetSearch->search(
             $alphabetList,
             $this->config->get("global.businessHours.searchMoveTarget"),
             $this->config->get("global.businessHours.row"),
-            $alphabetList[$beginColPos + $this->sheetAlphabet->getPosAlphabetNumber($this->config->get("global.businessHours.row"))],
+            $alphabetList[$beginColPos + $this->sheetAlphabet->getPosAlphabetNumber($this->config->get("global.businessHours.col"))],
             $sheetId
         );
     }

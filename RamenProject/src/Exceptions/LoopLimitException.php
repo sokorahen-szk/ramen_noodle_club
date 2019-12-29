@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 use App\Exceptions\BaseException;
-class BusinessHourSheetEmptyException extends BaseException {
+class LoopLimitException extends BaseException {
     public function __construct($response = null)
     {
         $appendMessage = '';
@@ -12,8 +12,6 @@ class BusinessHourSheetEmptyException extends BaseException {
         } else if($response !== null){
             $appendMessage = $response;
         }
-        parent::__construct(
-            "データ取得できませんでした。営業時間の情報が書かれた「supsystic-tables」の情報を確認してください。\n" . $appendMessage
-        );
+        parent::__construct("反復処理が制限されている回数を超えたため、エラーが発生しました。\n" . $response);
     }
 }

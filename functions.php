@@ -66,10 +66,12 @@ $test_data = [
 
 
 /****************************************************************
- ▼　ここから、 functions.php 内で使うコード　▼
+ ▼　ここから、 営業時間のカテゴリーを変更する
+ 　　functions.php 内で使うコード　▼
 ****************************************************************/
 define("RAMEN_PROJECT_INCLUDE_SERVICE_STATUS", class_exists('BusinessHoursService', false) );
 define("VENDOR_PATH", "/RamenProject/vendor/autoload.php");
+define("CONFIG_DIR", dirname(__FILE__) . "/RamenProject/");
 
 try {
     define("VENDOR_DIRECTORY_FULL_PATH_NAME", checkVendorPath() );
@@ -87,7 +89,8 @@ function checkVendorPath() {
     throw new Exception('Include file does not exists or is not readable.');
 }
 /****************************************************************
- ▲　ここまで、 functions.php 内で使うコード　▲
+ ▲　ここから、 営業時間のカテゴリーを変更する
+ 　　functions.php 内で使うコード　▲
 ****************************************************************/
 
 

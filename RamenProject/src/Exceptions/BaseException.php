@@ -2,11 +2,27 @@
 
 namespace App\Exceptions;
 
+use App\Lib\SlackClient;
+
 class BaseException extends \Exception {
 
-    public function __construct($message)
+    private $slackClient;
+
+    public function __construct($message, $code = 0)
     {
-        parent::__construct($message);
+        $this->SlackClient = new SlackClient();
+
+        //Exception（親クラス）にエラーを渡す
+        parent::__construct($message, $code);
+
+        //Slackにエラー通知
+        $this->sendMessageExternalService($message);
+
+    }
+
+    private function sendMessageExternalService($message) :void
+    {
+        $this->SlackClient->pushMessage($message);
     }
 
 }

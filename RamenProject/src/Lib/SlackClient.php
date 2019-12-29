@@ -14,23 +14,25 @@ class SlackClient {
     private $httpClient;
 
     public function __construct(){
-        $this->config = new Config("config/config.json");
+        $this->config = new Config(CONFIG_DIR . "config/config.json");
         $this->httpClient = new Client();
     }
 
+    /**
+     * Slackに通知する
+     * @param String $message エラーメッセージが入る
+     */
     public function pushMessage($message = null) :void
     {
-        $result = null;
         try {
             $this->setConfig();
-            $result = $this->httpClient->request(
+            $this->httpClient->request(
                 "POST",
                 $this->slackConfig->hookUrl,
                 [
                     "form_params" => $this->payload($message)
                 ]
             );
-
         } catch(GuzzleException $e) {
             //
         }
@@ -40,6 +42,10 @@ class SlackClient {
     /*
         PRIVATE METHODS
     */
+
+    /**
+     * Slackの設定情報をセットする
+     */
     private function setConfig() :void
     {
         $this->slackConfig = (Object) [
@@ -49,6 +55,11 @@ class SlackClient {
         ];
     }
 
+    /**
+     * Slack webhookのPOST用Payloadを作る
+     * @param  String $message エラーメッセージが入る
+     * @return Array           payload配列 [ "payload" => <JSON形式> ]
+     */
     private function payload($message) :Array
     {
         $payload = json_encode([
