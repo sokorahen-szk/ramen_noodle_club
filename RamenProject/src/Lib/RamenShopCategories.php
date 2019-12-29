@@ -19,6 +19,10 @@ class RamenShopCategories {
     public function changeCategoriesStatus($id, $status) :Bool
     {
         try {
+
+            //IDが 0 である場合、スキップさせる。
+            if($id === 0) return true;
+
             $result = null;
             $currentCategories = wp_get_post_categories($id);
             if($status == BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status == BusinessHourStatus::OPEN_BUSINESS_HOURS) {
