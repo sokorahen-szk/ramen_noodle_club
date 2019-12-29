@@ -25,7 +25,7 @@ class RamenShopCategories {
 
             $result = null;
             $currentCategories = wp_get_post_categories($id);
-            if($status == BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status == BusinessHourStatus::OPEN_BUSINESS_HOURS) {
+            if($status === BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status === BusinessHourStatus::OPEN_BUSINESS_HOURS) {
                 $result = wp_set_post_categories($id, $this->addCategoriesId($currentCategories, 1), true);
             } else {
                 $result = wp_set_post_categories($id, $this->removeCategoriesId($currentCategories, 1), false);

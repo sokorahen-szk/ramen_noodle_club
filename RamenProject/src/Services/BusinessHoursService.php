@@ -63,8 +63,8 @@ class BusinessHoursService {
 
         foreach($shopIdList as $id) {
             $results[] = $this->ramenShopCategories->changeCategoriesStatus(
-                $id,
-                $currentBusinessHourStatusList[$count++]
+                (int) $id,
+                (int) $currentBusinessHourStatusList[$count++]
             );
         }
 
