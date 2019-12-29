@@ -47,9 +47,10 @@ class RamenShopCategories {
             $array[$pos] = null;
         }
         foreach($array as $value) {
-            $results[] = $value;
+            if($value) $results[] = $value;
+
         }
-        return $array;
+        return $results;
     }
 
     private function addCategoriesId($array, $addValue)
