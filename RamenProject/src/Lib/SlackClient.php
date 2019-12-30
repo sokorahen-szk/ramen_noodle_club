@@ -12,10 +12,12 @@ class SlackClient {
     private $config;
     private $slackConfig;
     private $httpClient;
+    private $types;
 
-    public function __construct(){
+    public function __construct($types = null){
         $this->config = new Config(CONFIG_DIR . "config/config.json");
         $this->httpClient = new Client();
+        $this->types = $types ?: 'error';
     }
 
     /**
@@ -48,11 +50,19 @@ class SlackClient {
      */
     private function setConfig() :void
     {
-        $this->slackConfig = (Object) [
-            "hookUrl"       => env("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"),
-            "username"      => $this->config->get("global.slack.errorNotifyChannel.username"),
-            "iconEmoji"     => $this->config->get("global.slack.errorNotifyChannel.iconEmoji")
-        ];
+        if($this->types !== 'error') {
+            $this->slackConfig = (Object) [
+                "hookUrl"       => env("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"),
+                "username"      => $this->config->get("global.slack.SuccessfulNotifyChannel.username"),
+                "iconEmoji"     => $this->config->get("global.slack.SuccessfulNotifyChannel.iconEmoji")
+            ];
+        } else {
+            $this->slackConfig = (Object) [
+                "hookUrl"       => env("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"),
+                "username"      => $this->config->get("global.slack.errorNotifyChannel.username"),
+                "iconEmoji"     => $this->config->get("global.slack.errorNotifyChannel.iconEmoji")
+            ];
+        }
     }
 
     /**

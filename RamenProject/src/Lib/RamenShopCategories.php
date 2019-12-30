@@ -14,32 +14,63 @@ class RamenShopCategories {
      * WordPressの営業中かどうかを判別しているカテゴリーを変更する
      * @param  Int $id        店舗ID
      * @param  Int $status    営業中かどうかのステータス
-     * @return Bool           ステータス変更ができた場合、True。そうでない場合、False
+     * @return Array          変更に関わるデータを配列で返す
      */
-    public function changeCategoriesStatus($id, $status) :Bool
+    public function changeCategoriesStatus($id, $status) :Array
     {
         try {
 
-            //IDが 0 である場合、スキップさせる。
-            if($id === 0) return true;
-
             $result = null;
             $currentCategories = wp_get_post_categories($id);
+
+            $inValue = array_search($status, $currentCategories);
+
+            $response = [
+                "isSuccess"  => false,
+                "shopId"     => $id,
+                "status"     => $status,
+                "changed"    => false
+            ];
+
+            //IDが 0 である場合、スキップさせる。
+            if($id === 0) {
+                $response["isSuccess"] = true;
+                return $response;
+            }
+
             if($status === BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status === BusinessHourStatus::OPEN_BUSINESS_HOURS) {
+
+                //書き換えようとしているデータに対象のデータが含む場合、これはスキップ
+                if($inValue!==false) {
+                    $response["isSuccess"] = true;
+                    return $response;
+                }
+
                 $result = wp_set_post_categories($id, $this->addCategoriesId($currentCategories, 1), true);
             } else {
+
+                //書き換えようとしているデータに対象のデータが含む場合、これはスキップ
+                if($inValue===false) {
+                    $response["isSuccess"] = true;
+                    return $response;
+                }
+
                 $result = wp_set_post_categories($id, $this->removeCategoriesId($currentCategories, 1), false);
             }
 
+            //書き換え後が正常であるかどうか
             if( is_wp_error($result) || $result == false || $result == '' ) {
                 throw new BusinessHourStatusChangeFailureException([
                     "ramenShopId"           => $id,
                     "business_hours_status" => $status
                 ]);
             }
-            return true;
+
+            $response["isSuccess"] = true;
+            $response["changed"] = true;
+            return $response;
         } catch (BusinessHourStatusChangeFailureException $e) {
-            return false;
+            return $response;
         }
     }
 

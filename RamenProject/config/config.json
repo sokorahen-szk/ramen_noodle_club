@@ -17,6 +17,10 @@
             "errorNotifyChannel" : {
                 "username"          : "エラー通知",
                 "iconEmoji"         : ":alert:"
+            },
+            "SuccessfulNotifyChannel" : {
+                "username"          : "プロセス正常終了通知",
+                "iconEmoji"         : ":ok:"
             }
         }
 

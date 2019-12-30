@@ -33,9 +33,9 @@ class BusinessHoursService {
 
     /**
      * 営業時間を確認し、変更するプロセスを起動する
-     * @return Bool カテゴリーの追加｜削除で　Toloveる　がなければ、True、そうでない場合はFalse
+     * @return Object 書き換えた店舗のデータやステータス状態をオブジェクトで返す
      */
-    public function run() :Bool
+    public function run() :Object
     {
         $results = [];
         $count = 0;
@@ -68,7 +68,10 @@ class BusinessHoursService {
             );
         }
 
-        return !in_array(false, $results);
+        return (Object) [
+            "status"           => !in_array(false, array_column($results, "isSuccess")),
+            "data"             => $results
+         ];
     }
 
     /*
