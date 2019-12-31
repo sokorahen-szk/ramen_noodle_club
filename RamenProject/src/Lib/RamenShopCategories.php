@@ -39,22 +39,8 @@ class RamenShopCategories {
             }
 
             if($status === BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status === BusinessHourStatus::OPEN_BUSINESS_HOURS) {
-
-                //書き換えようとしているデータに対象のデータが含む場合、これはスキップ
-                if($inValue!==false) {
-                    $response["isSuccess"] = true;
-                    return $response;
-                }
-
                 $result = wp_set_post_categories($id, $this->addCategoriesId($currentCategories, 1), true);
             } else {
-
-                //書き換えようとしているデータに対象のデータが含む場合、これはスキップ
-                if($inValue===false) {
-                    $response["isSuccess"] = true;
-                    return $response;
-                }
-
                 $result = wp_set_post_categories($id, $this->removeCategoriesId($currentCategories, 1), false);
             }
 
