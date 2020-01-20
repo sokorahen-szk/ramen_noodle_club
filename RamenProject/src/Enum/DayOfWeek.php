@@ -9,7 +9,7 @@ class DayOfWeek {
     const WEDNESDAY    =   6;
     const THURSDAY     =   7;
     const FRIDAY       =   8;
-    const SATDAY       =   9;
+    const SATURDAY     =   9;
 
     private static $dayOfWeekList = [
         "sunday"    => self::SUNDAY,
@@ -18,7 +18,7 @@ class DayOfWeek {
         "wednesday" => self::WEDNESDAY,
         "thursday"  => self::THURSDAY,
         "friday"    => self::FRIDAY,
-        "satday"    => self::SATDAY,
+        "saturday"  => self::SATURDAY,
     ];
 
     public static function getTodayDayOfWeekNumber()
