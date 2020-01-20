@@ -38,9 +38,9 @@ class RamenShopCategories {
                 return $response;
             }
 
-            if($status === BusinessHourStatus::LAST_ORDER_BUSINESS_HOURS || $status === BusinessHourStatus::OPEN_BUSINESS_HOURS) {
+            if($status === BusinessHourStatus::OPEN_BUSINESS_HOURS) {
                 $result = wp_set_post_categories($id, $this->addCategoriesId($currentCategories, 1), true);
-            } else {
+            } else { //$status = 0(営業時間外) or 2(ラストーオーダー)は営業中を外す
                 $result = wp_set_post_categories($id, $this->removeCategoriesId($currentCategories, 1), false);
             }
 
@@ -60,6 +60,12 @@ class RamenShopCategories {
         }
     }
 
+    /**
+     * WordPressのカテゴリを外す
+     * @param  Array $array       対象の店舗が持っているカテゴリIDの配列
+     * @param  Int   $ignoreValue 除外するID番号
+     * @return Array              除外するIDを取り除いたカテゴリIDの配列を返す
+     */
     private function removeCategoriesId($array, $ignoreValue)
     {
         $pos = array_search($ignoreValue, $array);
@@ -74,6 +80,12 @@ class RamenShopCategories {
         return $results;
     }
 
+    /**
+     * WordPressのカテゴリを追加する
+     * @param  Array $array       対象の店舗が持っているカテゴリIDの配列
+     * @param  Int   $ignoreValue 追加するカテゴリID
+     * @return Array              追加するカテゴリIDの最後尾に追加して配列を返す
+     */
     private function addCategoriesId($array, $addValue)
     {
         $pos = array_search($addValue, $array);
