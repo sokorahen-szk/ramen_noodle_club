@@ -69,6 +69,7 @@ $test_data = [
  ▼　ここから、 営業時間のカテゴリーを変更する
  　　functions.php 内で使うコード　▼
 ****************************************************************/
+define("END_OF_CELL", "No value");
 define("RAMEN_PROJECT_INCLUDE_SERVICE_STATUS", class_exists('BusinessHoursService', false) );
 define("VENDOR_PATH", "/RamenProject/vendor/autoload.php");
 define("CONFIG_DIR", dirname(__FILE__) . "/RamenProject/");
@@ -80,7 +81,6 @@ try {
     //Autoloadが読み込みできない場合、例外処理として対応し、継続処理は続ける。システム上影響はでない
 }
 function checkVendorPath() {
-    $pathName = null;
     if( file_exists(dirname(dirname(__FILE__)).VENDOR_PATH) ) {
          return dirname( dirname(__FILE__).VENDOR_PATH );
     } else if( file_exists(dirname(__FILE__).VENDOR_PATH) ) {
@@ -111,7 +111,12 @@ function do_shortcode($content) {
 function test_data_store($id, $row, $col) {
     global $test_data;
     $col = getPosAlphabetNumber($col, 2);
-    return (String)$test_data[$row - 1][$col - 1];
+
+    $val =(String)$test_data[$row - 1][$col - 1];
+    if ($val == "") {
+        return END_OF_CELL;
+    }
+    return $val;
 }
 
 function getPosAlphabetNumber($alphabet, $length)
@@ -139,6 +144,10 @@ function generate($length) {
 
 function wp_set_post_categories($post_id, $post_categories, $append) {
     return array($post_categories);
+}
+
+function wp_get_post_categories($post_id, $args = null) {
+    return [];
 }
 
 function is_wp_error($wpClass) {

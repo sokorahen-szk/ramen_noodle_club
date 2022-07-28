@@ -3,16 +3,11 @@
 include_once VENDOR_DIRECTORY_FULL_PATH_NAME;
 
 use App\Services\BusinessHoursService;
-
-use App\Exceptions\BusinessHourSheetEmptyException;
-use App\Exceptions\ResultResponseMismatchException;
-use App\Exceptions\BusinessHourStatusChangeFailureException;
 use Dotenv\Dotenv;
 
 //Slack
 use App\Lib\SlackClient;
 
-define("END_OF_CELL", "No value");
 define("DEFAULT_TIMEZONE", date_default_timezone_get());
 
 $dotenv = Dotenv::createImmutable(__DIR__); //.envのパスが異なる場合は変更する
@@ -66,11 +61,6 @@ try {
         );
     }
 
-} catch(BusinessHourSheetEmptyException $e) {
-    //
-} catch(ResultResponseMismatchException $e) {
-    //
-} catch(BusinessHourStatusChangeFailureException $e) {
-    //
+} catch(\Exception $e) {
 }
 ?>
