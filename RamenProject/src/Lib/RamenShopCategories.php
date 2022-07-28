@@ -23,8 +23,6 @@ class RamenShopCategories {
             $result = null;
             $currentCategories = wp_get_post_categories($id);
 
-            $inValue = array_search($status, $currentCategories);
-
             $response = [
                 "isSuccess"  => false,
                 "shopId"     => $id,

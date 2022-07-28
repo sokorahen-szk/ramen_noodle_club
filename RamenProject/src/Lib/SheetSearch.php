@@ -7,13 +7,10 @@ use App\Excepitons\LoopLimitException;
 
 class SheetSearch {
 
-    private $sheetId;
     private $pointer;
     private $row;
     private $col;
-    private $alphabetList;
     private $id;
-    private $sheetAlphabet;
     private $loopLimitNumber;
 
     public function __construct(){
@@ -102,18 +99,6 @@ class SheetSearch {
         $this->row = null;
         $this->col = null;
     }
-
-    /**
-     * アルファベットの文字配列から、特定文字（アルファベット）の位置を取得する
-     * @param  Array $alphabetList  アルファベット配列 Ex: ”A" 〜 "AZ" の情報が配列として入る
-     * @param  String $beginColPos  Sheetの開始位置のアルファベット
-     * @return Int|Null             特定のキーの位置がわかれば、見つけた位置の添字番号を返す。見つからない場合Null
-     */
-    private function convertToNumber($alphabetList, $beginColPos) :?Int
-    {
-        return array_search($beginColPos, $alphabetList) ?: null;
-    }
-
 }
 
 ?>

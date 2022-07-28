@@ -71,7 +71,7 @@ class BusinessHoursService {
         return (Object) [
             "status"           => !in_array(false, array_column($results, "isSuccess")),
             "data"             => $results
-         ];
+        ];
     }
 
     /*
