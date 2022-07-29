@@ -20,6 +20,8 @@ class SlackClient extends Notification implements INotificationClient {
             $this->notificationType = $type;
         }
 
+        $this->setHeaders("Content-Type", "application/x-www-form-urlencoded");
+
         $payload = $this->payload($message);
         $this->push($payload, getenv("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
     }
@@ -52,10 +54,5 @@ class SlackClient extends Notification implements INotificationClient {
             "icon_emoji"    => $slackConfig->iconEmoji
         ]);
         return [ "payload" => $payload ];
-    }
-
-    public function setWebhookUrl(string $webhookUrl): void
-    {
-        parent::setWebhookUrl($webhookUrl);
     }
 }

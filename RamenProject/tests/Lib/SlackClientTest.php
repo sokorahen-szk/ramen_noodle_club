@@ -11,12 +11,14 @@ class SlackClientTest extends TestCase {
         $this->config = $this->config = new Config(dirname(__FILE__) . "/../../config/config.json");
     }
 
-    public function test_pushNotification_it_should_return_success() {
+    public function test_slack_pushNotification_it_should_return_success() {
+        $this->markTestSkipped("skip");
         $instance = new SlackClient($this->config);
         $instance->pushNotification(__FUNCTION__ . "成功テストメッセージ");
     }
 
-    public function test_pushNotification_it_should_return_failed() {
+    public function test_slack_pushNotification_it_should_return_failed() {
+        $this->markTestSkipped("skip");
         $instance = new SlackClient($this->config);
         $instance->pushNotification(__FUNCTION__ . "失敗テストメッセージ", "error");
     }
