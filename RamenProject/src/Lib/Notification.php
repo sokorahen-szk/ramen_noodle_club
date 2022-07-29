@@ -20,6 +20,11 @@ class Notification {
      */
     private $webhookUrl;
 
+    /**
+     * @var array
+     */
+    private $headers = [];
+
     public function __construct(HttpClient $httpClient = null)
     {
         $this->httpClient = $httpClient ?: new HttpClient();
@@ -36,8 +41,14 @@ class Notification {
             $this->webhookUrl,
             [
                 "form_params" => $payload,
-            ]
+                "headers" => $this->headers,
+            ],
         );
+    }
+
+    public function setHeaders(string $key, string $value): void
+    {
+        $this->headers[$key] = $value;
     }
 
     protected function setWebhookUrl(string $webhookUrl): void

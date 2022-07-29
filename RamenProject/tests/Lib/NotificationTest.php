@@ -14,7 +14,7 @@ class NotificationTest extends TestCase {
     }
 
     public function test_pushNotification_for_slack() {
-        $this->markTestSkipped("Slackに通知飛ぶため、Skip入れてます。テストするときはSkipをコメントアウト");
+        $this->markTestSkipped("skip");
         $instance = new Notification();
 
         $payload = json_encode([
@@ -27,6 +27,15 @@ class NotificationTest extends TestCase {
     }
 
     public function test_pushNotification_for_discord() {
-        // TODO:
+        $this->markTestSkipped("skip");
+        $instance = new Notification();
+
+        $payload = [
+            "username" => "テスト通知",
+            "avatar_url" => "https://cdn.wikiwiki.jp/to/w/nijisanji/%E5%8B%87%E6%B0%97%E3%81%A1%E3%81%B2%E3%82%8D/::ref/face_orig.png",
+            "content" => "テストメッセージ",
+        ];
+
+        $instance->push($payload, getenv("DISCORD_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
     }
 }
