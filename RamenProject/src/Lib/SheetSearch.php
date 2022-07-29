@@ -11,12 +11,10 @@ class SheetSearch {
     private $row;
     private $col;
     private $id;
-    private $loopLimitNumber;
 
-    public function __construct(){
-        $this->loopLimitNumber = 200;
-    }
+    const LOOP_LIMIT_NUMBER = 200;
 
+    public function __construct(){}
 
     /**
      * 探索する
@@ -29,7 +27,6 @@ class SheetSearch {
      */
     public function search($alphabetList, $move, $beginRowPos, $beginColPos, $sheetId) :Array
     {
-
         $this->clearValues();
 
         $this->row = (int)$beginRowPos;
@@ -49,10 +46,6 @@ class SheetSearch {
 
         return $result;
     }
-
-    /*
-        PRIVATE METHODS
-    */
 
     /**
      * Sheetの移動するセルの向きをpointerに入れる
@@ -79,8 +72,8 @@ class SheetSearch {
         $count = 0;
         while(($res = do_shortcode(
             "[supsystic-tables-cell id=".$this->id." row=".$this->row." col=".$this->col."]"
-        )) != END_OF_CELL) {
-            if($this->loopLimitNumber <= $count) {
+        )) != getenv("END_OF_CELL")) {
+            if(self::LOOP_LIMIT_NUMBER <= $count) {
                 throw new LoopLimitException();
             }
             $response[] = $res;
