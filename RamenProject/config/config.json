@@ -1,28 +1,26 @@
 {
-    "global" : {
+  "global": {
+    "ramenShop": {
+      "row": 2,
+      "col": "B",
+      "searchMoveTarget": "y"
+    },
 
-        "ramenShop" : {
-            "row" : 2,
-            "col" : "B",
-            "searchMoveTarget" : "y"
-        },
+    "businessHours": {
+      "row": 2,
+      "col": "C",
+      "searchMoveTarget": "y"
+    },
 
-        "businessHours" : {
-            "row" : 2,
-            "col" : "C",
-            "searchMoveTarget" : "y"
-        },
-
-        "slack" : {
-            "errorNotifyChannel" : {
-                "username"          : "エラー通知",
-                "iconEmoji"         : ":alert:"
-            },
-            "SuccessfulNotifyChannel" : {
-                "username"          : "プロセス正常終了通知",
-                "iconEmoji"         : ":ok:"
-            }
-        }
-
+    "slack": {
+      "errorNotifyChannel": {
+        "username": "エラー通知",
+        "iconEmoji": ":alert:"
+      },
+      "successfulNotifyChannel": {
+        "username": "プロセス正常終了通知",
+        "iconEmoji": ":ok:"
+      }
     }
+  }
 }
