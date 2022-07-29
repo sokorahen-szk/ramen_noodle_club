@@ -70,6 +70,7 @@ $test_data = [
  　　functions.php 内で使うコード　▼
 ****************************************************************/
 define("END_OF_CELL", "No value");
+define("CHANGE_CATEGORIES_NOTIFICATION_DEBUG", false);
 define("RAMEN_PROJECT_INCLUDE_SERVICE_STATUS", class_exists('BusinessHoursService', false) );
 define("VENDOR_PATH", "/RamenProject/vendor/autoload.php");
 define("CONFIG_DIR", dirname(__FILE__) . "/RamenProject/");
