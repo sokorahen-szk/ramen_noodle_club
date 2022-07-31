@@ -18,17 +18,37 @@ use App\Exceptions\ResultResponseMismatchException;
 
 class BusinessHoursService {
 
+    /**
+     * @var \Noodlehaus\Config
+     */
     private $config;
+
+    /**
+     * @var App\Lib\SheetSearch
+     */
     private $sheetSearch;
+
+    /**
+     * @var App\Lib\SheetAlphabet
+     */
     private $sheetAlphabet;
+
+    /**
+     * @var App\Lib\RamenShopCategories
+     */
     private $ramenShopCategories;
 
-    public function __construct()
+    public function __construct(
+        Config $config,
+        SheetSearch $sheetSearch,
+        SheetAlphabet $sheetAlphabet,
+        RamenShopCategories $ramenShopCategories
+    )
     {
-        $this->config = new Config(CONFIG_DIR . "config/config.json");
-        $this->sheetSearch = new SheetSearch();
-        $this->sheetAlphabet = new SheetAlphabet(2);
-        $this->ramenShopCategories = new RamenShopCategories();
+        $this->config = $config;
+        $this->sheetSearch = $sheetSearch;
+        $this->sheetAlphabet = $sheetAlphabet;
+        $this->ramenShopCategories = $ramenShopCategories;
     }
 
     /**
@@ -52,7 +72,7 @@ class BusinessHoursService {
         //営業中かどうかシート参照しデータ格納
         $currentBusinessHourStatusList = $this->getBusinessHoursStatusList($alphabetList, $sheetId);
 
-        if( !(count($shopIdList) == count($currentBusinessHourStatusList)) ){
+        if(count($shopIdList) != count($currentBusinessHourStatusList)){
             throw new ResultResponseMismatchException([
                 "sheet_id"            => $sheetId,
                 "alphabet_list"       => $alphabetList,
@@ -73,10 +93,6 @@ class BusinessHoursService {
             "data"             => $results
         ];
     }
-
-    /*
-        PRIVATE METHODS
-    */
 
     /**
      * ラーメン屋さんのIDリストを取得する

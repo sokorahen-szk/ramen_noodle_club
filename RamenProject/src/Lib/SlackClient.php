@@ -7,6 +7,9 @@ use Noodlehaus\Config;
 use GuzzleHttp\ClientInterface as IHttpClient;
 
 class SlackClient extends Notification implements INotificationClient {
+    /**
+     * @var Noodlehaus\Config
+     */
     private $config;
 
     public function __construct(Config $config, ?IHttpClient $httpClient = null){

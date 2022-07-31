@@ -2,30 +2,52 @@
 
 namespace App\Exceptions;
 
+use App\Lib\DiscordClient;
 use App\Lib\SlackClient;
+use App\Interfaces\INotificationClient;
 use Noodlehaus\Config;
+use GuzzleHttp\ClientInterface as IHttpClient;
+use GuzzleHttp\Client as HttpClient;
 
 class BaseException extends \Exception {
 
-    private $slackClient;
+    /**
+     * @var \Noodlehaus\Config
+     */
     private $config;
 
-    public function __construct($message, $code = 0)
+    public function __construct($message, $code = 0, ?IHttpClient $httpClient = null)
     {
         $this->config = new Config(dirname(__FILE__) . "/../../config/config.json");
-        $this->SlackClient = new SlackClient($this->config);
+        $httpClient = $httpClient ?: new HttpClient();
 
-        //Exception（親クラス）にエラーを渡す
         parent::__construct($message, $code);
 
-        //Slackにエラー通知
-        $this->sendMessageExternalService($message);
-
+        $this->sendMessageExternalService($message, $httpClient);
     }
 
-    private function sendMessageExternalService($message) :void
+    private function sendMessageExternalService(string $message, IHttpClient $httpClient) :void
     {
-        $this->SlackClient->pushNotification($message, "error");
-    }
+        // ローカル環境では、通知させたくないためpush通知させたくない。
+        //if (getenv("APP_ENV") === "local") {
+        //    return;
+        //}
 
+        /**
+         * @var App\Interfaces\INotificationClient
+         */
+        $notificationClient = null;
+        switch (getenv("NOTIFICATION_SERVICE_NAME")) {
+            case "slack":
+                $notificationClient = new SlackClient($this->config, $httpClient);
+                break;
+            case "discord":
+                $notificationClient = new DiscordClient($this->config, $httpClient);
+                break;
+            default:
+                throw new \Exception("NOTIFICATION_SERVICE_NAME slack or discord を設定してください。");
+        }
+
+        $notificationClient->pushNotification($message, "error");
+    }
 }

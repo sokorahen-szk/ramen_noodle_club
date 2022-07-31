@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 use App\Lib\Notification;
 
 use Dotenv\Dotenv;
-use \Mockery;
+use \Mockery as m;
 use GuzzleHttp\ClientInterface as IHttpClient;
 
 class NotificationTest extends TestCase {
@@ -41,10 +41,10 @@ class NotificationTest extends TestCase {
             "headers" => [],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", "https://webhookurl/slack", Mockery::on(function($actual) use ($expected) {
+            ->with("POST", "https://webhookurl/slack", m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })
@@ -81,10 +81,10 @@ class NotificationTest extends TestCase {
             "headers" => [],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", "https://webhookurl/discord", Mockery::on(function($actual) use ($expected) {
+            ->with("POST", "https://webhookurl/discord", m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })

@@ -141,7 +141,7 @@ class SheetSearchTest extends TestCase {
                 "y",
                 2,
                 "B",
-                99,
+                999,
             );
 
             $this->assertTrue(false);

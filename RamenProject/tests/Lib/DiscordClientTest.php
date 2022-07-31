@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 use App\Lib\DiscordClient;
 use Noodlehaus\Config;
 use Dotenv\Dotenv;
-use \Mockery;
+use \Mockery as m;
 use GuzzleHttp\ClientInterface as IHttpClient;
 
 class DiscordClientTest extends TestCase {
@@ -37,10 +37,10 @@ class DiscordClientTest extends TestCase {
             "headers" => [],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", Mockery::any(), Mockery::on(function($actual) use ($expected) {
+            ->with("POST", m::any(), m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })
@@ -71,10 +71,10 @@ class DiscordClientTest extends TestCase {
             "headers" => [],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", Mockery::any(), Mockery::on(function($actual) use ($expected) {
+            ->with("POST", m::any(), m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })

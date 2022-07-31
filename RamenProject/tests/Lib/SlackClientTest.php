@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use App\Lib\SlackClient;
 use Noodlehaus\Config;
-use \Mockery;
+use \Mockery as m;
 use GuzzleHttp\ClientInterface as IHttpClient;
 
 class SlackClientTest extends TestCase {
@@ -31,10 +31,10 @@ class SlackClientTest extends TestCase {
             "headers" => ['Content-Type' => 'application/x-www-form-urlencoded'],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", Mockery::any(), Mockery::on(function($actual) use ($expected) {
+            ->with("POST", m::any(), m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })
@@ -62,10 +62,10 @@ class SlackClientTest extends TestCase {
             "headers" => ['Content-Type' => 'application/x-www-form-urlencoded'],
         ];
 
-        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient = m::mock(IHttpClient::class);
         $mockHttpClient->shouldReceive("request")
             ->once()
-            ->with("POST", Mockery::any(), Mockery::on(function($actual) use ($expected) {
+            ->with("POST", m::any(), m::on(function($actual) use ($expected) {
                     $this->assertSame($expected, $actual);
                     return true;
                 })
