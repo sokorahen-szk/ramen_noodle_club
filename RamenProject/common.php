@@ -76,8 +76,8 @@ function do_shortcode($content) {
         }
     }
 
-    // sheetIdが99の時、常に空文字を返すようにする。テストコード
-    if ((int) $results["id"] == 99) {
+    // sheetIdが999の時、常に空文字を返すようにする。テストコード
+    if ((int) $results["id"] == 999) {
         return "";
     }
     return test_data_store($results["id"], (int)$results["row"], $results["col"]);
@@ -118,13 +118,28 @@ function generate($length) {
 }
 
 function wp_set_post_categories($post_id, $post_categories, $append) {
+    if ($post_id == 998) {
+        return false;
+    }
+    if ($post_id == 999) {
+        return "error";
+    }
+
     return array($post_categories);
 }
 
 function wp_get_post_categories($post_id, $args = null) {
-    return [];
+    if ($post_id === 0 || $post_id === 900) {
+        return [];
+    }
+
+    return [2, 3, 4, 5];
 }
 
-function is_wp_error($wpClass) {
-    return !is_array($wpClass);
+function is_wp_error($thing) {
+    if ($thing == "error") {
+        return true;
+    }
+
+    return false;
 }
