@@ -1,46 +1,39 @@
 <?php
-
 include_once VENDOR_DIRECTORY_FULL_PATH_NAME;
 
 use App\Services\BusinessHoursService;
-
-use App\Exceptions\BusinessHourSheetEmptyException;
-use App\Exceptions\ResultResponseMismatchException;
-use App\Exceptions\BusinessHourStatusChangeFailureException;
-use Dotenv\Dotenv;
-
-//Slack
+use App\Lib\SheetSearch;
+use App\Lib\SheetAlphabet;
+use App\Lib\RamenShopCategories;
+use App\Lib\DiscordClient;
 use App\Lib\SlackClient;
+use Dotenv\Dotenv;
+use Noodlehaus\Config;
+use GuzzleHttp\ClientInterface as IHttpClient;
+use GuzzleHttp\Client as HttpClient;
 
-define("END_OF_CELL", "No value");
 define("DEFAULT_TIMEZONE", date_default_timezone_get());
 
 $dotenv = Dotenv::createImmutable(__DIR__); //.envのパスが異なる場合は変更する
 $dotenv->load();
 
-$slackClient = new SlackClient("success");
+$config = new Config(dirname(__FILE__) . "/config/config.json");
+$httpClient = new HttpClient();
 
-function env($EnvPathName, $defaultValue = null) {
-    global $dotenv;
-    return @getenv($EnvPathName) ?: $defaultValue;
-}
+$businessHoursService = new BusinessHoursService(
+    $config,
+    new SheetSearch(),
+    new SheetAlphabet(2),
+    new RamenShopCategories()
+);
 
-function changeTimeZone($timezone) {
-    date_default_timezone_set($timezone);
-}
+$response = [];
 
-$startDateTime = null;
-$endDatetime = null;
-$response = null;
-$responseFormat = null;
-
-$businessHoursService = new BusinessHoursService();
 try {
-
     changeTimeZone("Asia/Tokyo");
 
     //プロセス開始日時
-    $startDateTime = date("Y-m-d H:i:s");
+    $startedDatetime = date("Y-m-d H:i:s");
 
     //結果
     $result = $businessHoursService->run();
@@ -50,27 +43,70 @@ try {
     }
 
     //プロセス終了日時
-    $endDatetime = date("Y-m-d H:i:s");
+    $endedDatetime = date("Y-m-d H:i:s");
 
     changeTimeZone(DEFAULT_TIMEZONE);
 
-    if(CHANGE_CATEGORIES_NOTIFICATION_DEBUG) {
-        $responseToEncodeByJson = json_encode([
-            "startDateTime"     =>      $startDateTime,
-            "endDatetime"       =>      $endDatetime,
-            "response"          =>      $response
-        ]);
+    sendProcessSuccessedNotification($response, $startedDatetime, $endedDatetime, $config, $httpClient);
 
-        $slackClient->pushMessage(
-            "処理が完了しました。\n" . $responseToEncodeByJson
-        );
+} catch(\Exception $e) {
+    // debug
+    var_dump($e->getMessage());
+}
+
+function changeTimeZone($timezone) {
+    date_default_timezone_set($timezone);
+}
+
+function sendMessageExternalService(string $messageJson, string $type, Config $config, IHttpClient $httpClient) {
+        /**
+         * @var App\Interfaces\INotificationClient
+         */
+        $notificationClient = null;
+        switch (getenv("NOTIFICATION_SERVICE_NAME")) {
+            case "slack":
+                $notificationClient = new SlackClient($config, $httpClient);
+                break;
+            case "discord":
+                $notificationClient = new DiscordClient($config, $httpClient);
+                break;
+            default:
+                throw new \Exception("NOTIFICATION_SERVICE_NAME slack or discord を設定してください。");
+        }
+
+        $notificationClient->pushNotification($messageJson, $type);
+}
+
+function sendProcessSuccessedNotification(
+        array $response,
+        string $startedDatetime,
+        string $endedDatetime,
+        Config $config,
+        IHttpClient $httpClient
+    ) {
+    $limit = 30;
+
+    if (count($response) === 0) return;
+    if (getenv("CHANGE_CATEGORIES_NOTIFICATION_DEBUG")) {
+        $loopCount = ceil(count($response)/$limit);
+
+        for ($i = 0; $i < $loopCount; $i++) {
+            $data = array_slice($response, $i * $limit, $limit);
+
+            $responseToEncodeByJson = json_encode([
+                "startedDatetime" => $startedDatetime,
+                "endedDatetime" => $endedDatetime,
+                "response" => $data,
+            ]);
+
+            sendMessageExternalService(
+                sprintf("処理が完了しました。(%d/%d)\n ```%s```", $i + 1, $loopCount, $responseToEncodeByJson),
+                "success",
+                $config,
+                $httpClient
+            );
+        }
+        exit;
     }
-
-} catch(BusinessHourSheetEmptyException $e) {
-    //
-} catch(ResultResponseMismatchException $e) {
-    //
-} catch(BusinessHourStatusChangeFailureException $e) {
-    //
 }
 ?>

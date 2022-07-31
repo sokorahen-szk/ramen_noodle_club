@@ -51,10 +51,8 @@ class SheetAlphabet {
         $list = [];
         $maxLimit = $this->length * 26;
         $count = 0;
-        for($a = 'A' ; ; $a++) {
+        for($a = 'A'; $count++ < $maxLimit ; $a++) {
             $list[] = $a;
-            ++$count;
-            if($maxLimit < $count) break;
         }
         return $list;
     }
