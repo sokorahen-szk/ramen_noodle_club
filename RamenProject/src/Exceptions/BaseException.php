@@ -3,14 +3,17 @@
 namespace App\Exceptions;
 
 use App\Lib\SlackClient;
+use Noodlehaus\Config;
 
 class BaseException extends \Exception {
 
     private $slackClient;
+    private $config;
 
     public function __construct($message, $code = 0)
     {
-        $this->SlackClient = new SlackClient();
+        $this->config = new Config(dirname(__FILE__) . "/../../config/config.json");
+        $this->SlackClient = new SlackClient($this->config);
 
         //Exception（親クラス）にエラーを渡す
         parent::__construct($message, $code);
@@ -22,7 +25,7 @@ class BaseException extends \Exception {
 
     private function sendMessageExternalService($message) :void
     {
-        $this->SlackClient->pushMessage($message);
+        $this->SlackClient->pushNotification($message, "error");
     }
 
 }
