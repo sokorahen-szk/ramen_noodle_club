@@ -75,6 +75,11 @@ function do_shortcode($content) {
             $results[ $result[0] ] = $result[1];
         }
     }
+
+    // sheetIdが99の時、常に空文字を返すようにする。テストコード
+    if ((int) $results["id"] == 99) {
+        return "";
+    }
     return test_data_store($results["id"], (int)$results["row"], $results["col"]);
 }
 

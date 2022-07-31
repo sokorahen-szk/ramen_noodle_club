@@ -4,6 +4,8 @@ use PHPUnit\Framework\TestCase;
 use App\Lib\Notification;
 
 use Dotenv\Dotenv;
+use \Mockery;
+use GuzzleHttp\ClientInterface as IHttpClient;
 
 class NotificationTest extends TestCase {
     private $dotenv;
@@ -23,7 +25,34 @@ class NotificationTest extends TestCase {
             "icon_emoji"    => ":ok:",
         ]);
 
-        $instance->push(["payload" => $payload], getenv("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
+        $actual = $instance->push(["payload" => $payload], getenv("SLACK_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
+        $this->assertTrue($actual);
+    }
+
+    public function test_pushNotification_for_slack_by_mock() {
+        $payload = json_encode([
+            "username"      => "テスト通知",
+            "text"          => "テストメッセージ",
+            "icon_emoji"    => ":ok:",
+        ]);
+
+        $expected = [
+            "form_params" => ["payload" => $payload],
+            "headers" => [],
+        ];
+
+        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient->shouldReceive("request")
+            ->once()
+            ->with("POST", "https://webhookurl/slack", Mockery::on(function($actual) use ($expected) {
+                    $this->assertSame($expected, $actual);
+                    return true;
+                })
+            );
+        $instance = new Notification($mockHttpClient);
+
+        $actual = $instance->push(["payload" => $payload], "https://webhookurl/slack");
+        $this->assertTrue($actual);
     }
 
     public function test_pushNotification_for_discord() {
@@ -36,6 +65,33 @@ class NotificationTest extends TestCase {
             "content" => "テストメッセージ",
         ];
 
-        $instance->push($payload, getenv("DISCORD_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
+        $actual = $instance->push($payload, getenv("DISCORD_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
+        $this->assertTrue($actual);
+    }
+
+    public function test_pushNotification_for_discord_by_mock() {
+        $payload = [
+            "username" => "テスト通知",
+            "avatar_url" => "https://avator_url",
+            "content" => "テストメッセージ",
+        ];
+
+        $expected = [
+            "form_params" => $payload,
+            "headers" => [],
+        ];
+
+        $mockHttpClient = Mockery::mock(IHttpClient::class);
+        $mockHttpClient->shouldReceive("request")
+            ->once()
+            ->with("POST", "https://webhookurl/discord", Mockery::on(function($actual) use ($expected) {
+                    $this->assertSame($expected, $actual);
+                    return true;
+                })
+            );
+        $instance = new Notification($mockHttpClient);
+
+        $actual = $instance->push($payload, "https://webhookurl/discord");
+        $this->assertTrue($actual);
     }
 }

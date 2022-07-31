@@ -3,7 +3,7 @@
 namespace App\Lib;
 
 use App\Exceptions\BusinessHourSheetEmptyException;
-use App\Excepitons\LoopLimitException;
+use App\Exceptions\LoopLimitException;
 
 class SheetSearch {
 

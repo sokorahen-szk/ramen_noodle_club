@@ -2,6 +2,7 @@
 
 namespace App\Lib;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\ClientInterface as IHttpClient;
 
 class Notification {
 
@@ -25,12 +26,12 @@ class Notification {
      */
     private $headers = [];
 
-    public function __construct(HttpClient $httpClient = null)
+    public function __construct(?IHttpClient $httpClient = null)
     {
         $this->httpClient = $httpClient ?: new HttpClient();
     }
 
-    public function push(array $payload, ?string $webhookUrl = null)
+    public function push(array $payload, ?string $webhookUrl = null): bool
     {
         if ($webhookUrl) {
             $this->webhookUrl = $webhookUrl;
@@ -44,6 +45,8 @@ class Notification {
                 "headers" => $this->headers,
             ],
         );
+
+        return true;
     }
 
     public function setHeaders(string $key, string $value): void

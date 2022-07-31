@@ -4,24 +4,24 @@ namespace App\Lib;
 
 use App\Interfaces\INotificationClient;
 use Noodlehaus\Config;
-use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\ClientInterface as IHttpClient;
 
 class DiscordClient extends Notification implements INotificationClient {
     private $config;
 
-    public function __construct(Config $config, ?HttpClient $httpClient = null){
+    public function __construct(Config $config, ?IHttpClient $httpClient = null){
         parent::__construct($httpClient);
         $this->config = $config;
     }
 
-    public function pushNotification(string $message, ?string $type = null)
+    public function pushNotification(string $message, ?string $type = null): bool
     {
         if ($type) {
             $this->notificationType = $type;
         }
 
         $payload = $this->payload($message);
-        $this->push($payload, getenv("DISCORD_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
+        return $this->push($payload, getenv("DISCORD_WEBHOOK_ERROR_PUSH_CHANNEL_URL"));
     }
 
     public function setWebhookUrl(string $webhookUrl): void

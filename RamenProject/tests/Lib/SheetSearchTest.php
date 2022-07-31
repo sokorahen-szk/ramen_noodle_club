@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\LoopLimitException;
 use PHPUnit\Framework\TestCase;
 use Dotenv\Dotenv;
 use App\Lib\SheetSearch;
@@ -83,7 +84,7 @@ class SheetSearchTest extends TestCase {
             "y",
             2,
             "B",
-            99,
+            1,
         );
         $this->assertCount(54, $actual);
         $this->assertSame($expected, $actual);
@@ -102,7 +103,7 @@ class SheetSearchTest extends TestCase {
             "y",
             53,
             "B",
-            99,
+            2,
         );
         $this->assertCount(3, $actual);
         $this->assertSame($expected, $actual);
@@ -124,9 +125,28 @@ class SheetSearchTest extends TestCase {
             "y",
             50,
             "C",
-            99,
+            3,
         );
         $this->assertCount(6, $actual);
         $this->assertSame($expected, $actual);
+    }
+
+    public function test_search_it_should_return_exception_error() {
+        $this->markTestSkipped("skip");
+        $instance = new SheetSearch();
+
+        try {
+            $instance->search(
+                $this->sheetAlphabet->getAllAlphabet(),
+                "y",
+                2,
+                "B",
+                99,
+            );
+
+            $this->assertTrue(false);
+        } catch (LoopLimitException $e) {
+            $this->assertTrue(true);
+        }
     }
 }
