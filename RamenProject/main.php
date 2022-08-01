@@ -50,8 +50,7 @@ try {
     sendProcessSuccessedNotification($response, $startedDatetime, $endedDatetime, $config, $httpClient);
 
 } catch(\Exception $e) {
-    // debug
-    var_dump($e->getMessage());
+    // 例外を出力させない
 }
 
 function changeTimeZone($timezone) {
@@ -106,7 +105,6 @@ function sendProcessSuccessedNotification(
                 $httpClient
             );
         }
-        exit;
     }
 }
 ?>
