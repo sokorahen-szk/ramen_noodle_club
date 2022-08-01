@@ -50,7 +50,7 @@ try {
     sendProcessSuccessedNotification($response, $startedDatetime, $endedDatetime, $config, $httpClient);
 
 } catch(\Exception $e) {
-    // 例外を出力させない
+    throw $e;
 }
 
 function changeTimeZone($timezone) {
