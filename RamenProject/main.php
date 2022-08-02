@@ -86,7 +86,7 @@ function sendProcessSuccessedNotification(
     $limit = 30;
 
     if (count($response) === 0) return;
-    if (getenv("CHANGE_CATEGORIES_NOTIFICATION_DEBUG")) {
+    if ((bool) getenv("CHANGE_CATEGORIES_NOTIFICATION_DEBUG")) {
         $loopCount = ceil(count($response)/$limit);
 
         for ($i = 0; $i < $loopCount; $i++) {
