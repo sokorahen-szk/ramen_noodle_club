@@ -3,23 +3,18 @@
 namespace App\Lib;
 
 use App\Exceptions\BusinessHourSheetEmptyException;
-use App\Excepitons\LoopLimitException;
+use App\Exceptions\LoopLimitException;
 
 class SheetSearch {
 
-    private $sheetId;
     private $pointer;
     private $row;
     private $col;
-    private $alphabetList;
     private $id;
-    private $sheetAlphabet;
-    private $loopLimitNumber;
 
-    public function __construct(){
-        $this->loopLimitNumber = 200;
-    }
+    const LOOP_LIMIT_NUMBER = 200;
 
+    public function __construct(){}
 
     /**
      * 探索する
@@ -32,7 +27,6 @@ class SheetSearch {
      */
     public function search($alphabetList, $move, $beginRowPos, $beginColPos, $sheetId) :Array
     {
-
         $this->clearValues();
 
         $this->row = (int)$beginRowPos;
@@ -52,10 +46,6 @@ class SheetSearch {
 
         return $result;
     }
-
-    /*
-        PRIVATE METHODS
-    */
 
     /**
      * Sheetの移動するセルの向きをpointerに入れる
@@ -82,8 +72,8 @@ class SheetSearch {
         $count = 0;
         while(($res = do_shortcode(
             "[supsystic-tables-cell id=".$this->id." row=".$this->row." col=".$this->col."]"
-        )) != END_OF_CELL) {
-            if($this->loopLimitNumber <= $count) {
+        )) != getenv("END_OF_CELL")) {
+            if(self::LOOP_LIMIT_NUMBER <= $count) {
                 throw new LoopLimitException();
             }
             $response[] = $res;
@@ -102,18 +92,6 @@ class SheetSearch {
         $this->row = null;
         $this->col = null;
     }
-
-    /**
-     * アルファベットの文字配列から、特定文字（アルファベット）の位置を取得する
-     * @param  Array $alphabetList  アルファベット配列 Ex: ”A" 〜 "AZ" の情報が配列として入る
-     * @param  String $beginColPos  Sheetの開始位置のアルファベット
-     * @return Int|Null             特定のキーの位置がわかれば、見つけた位置の添字番号を返す。見つからない場合Null
-     */
-    private function convertToNumber($alphabetList, $beginColPos) :?Int
-    {
-        return array_search($beginColPos, $alphabetList) ?: null;
-    }
-
 }
 
 ?>

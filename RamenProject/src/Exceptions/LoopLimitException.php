@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Exceptions;
+
 use App\Exceptions\BaseException;
 class LoopLimitException extends BaseException {
     public function __construct($response = null)
